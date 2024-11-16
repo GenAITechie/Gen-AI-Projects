@@ -17,6 +17,9 @@ An interactive application designed to help children learn about astronomy. The 
 	•	Provides tailored explanations suitable for children.
 
   **Screenshot 1 for more details**
+  https://github.com/GenAITechie/Gen-AI-Projects/blob/main/Astronomy%20Tutor%204%20Kids.jpg?raw=true 
+
+
 **Second AI Agent: Interactive Calculation Agent**
 	This project is an AI agent that can perform calculations and retrieve information by interacting in a loop of Thought, Action, PAUSE, and Observation, ultimately providing an Answer to the user’s question. The agent leverages OpenAI’s GPT models to process natural language queries and execute specific actions like calculations or retrieving average dog weights.
 
