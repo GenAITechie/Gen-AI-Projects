@@ -7,8 +7,10 @@ import sys
 print(sys.executable)
 
 # Set your OpenAI API key securely
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
+client = OpenAI(
+        api_key=os.environ.get("OPENAI_API_KEY"),  # This is the default and can be omitted
+    )
+print(os.environ.get("OPENAI_API_KEY"))
 class AstronomyAgent:
     def __init__(self, system_prompt=""):
         self.system_prompt = system_prompt
@@ -41,42 +43,45 @@ class AstronomyAgent:
 
     def retrieve_information(self, query):
         # Simulate information retrieval
-        
+        print("....... in retrieve.......")
         response = client.chat.completions.create(
-            engine="text-davinci-003",
-            prompt=f"Provide a simple explanation suitable for a child: {query}",
+            model="gpt-4o",
+            messages=[
+            {"role": "system", "content": "Provide simple explanations suitable for a child."},
+            {"role": "user", "content": query}
+             ],
             max_tokens=150,
             temperature=0.5,
             n=1,
             stop=None,
         )
-        return response.choices[0].text.strip()
-
-    client = OpenAI(
-        api_key=os.environ.get("OPENAI_API_KEY"),  # This is the default and can be omitted
-    )
+        return response.choices[0].message.content.strip()
+    
+    
 
     def generate_answer(self):
         # Exclude internal messages from the user's view
         messages_to_send = [msg for msg in self.conversation if not msg['content'].startswith(('Thought:', 'Action:', 'Pause:', 'Observation:'))]
-        completion = client.chat.completions.create(
-                chat_completion = client.chat.completions.create(
+        try:
+            completion = client.chat.completions.create(
                 messages=messages_to_send,
                 temperature=0.5,
                 model="gpt-4o"
                 )
-            )
-        return completion.choices[0].message.content.strip()
-
+            return completion.choices[0].message.content.strip()
+        except openai.error.OpenAIError as e:
+            print(f"An error occurred: {e}")
+            return "I'm sorry, but I couldn't process your request."
+    
 # Create the UI using Tkinter
 class AstronomyTutorApp:
     def __init__(self, root, agent):
         self.root = root
         self.agent = agent
-        self.root.title("Astronomy Tutor")
+        self.root.title("Astronomy Tutor for Kids")
 
         # Create chat display area
-        self.chat_display = scrolledtext.ScrolledText(self.root, wrap=tk.WORD, state='disabled', width=60, height=20, font=("Helvetica", 12))
+        self.chat_display = scrolledtext.ScrolledText(self.root, wrap=tk.WORD, state='disabled', width=120, height=40, font=("Helvetica", 12))
         self.chat_display.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
 
         # Create input field
@@ -107,16 +112,18 @@ class AstronomyTutorApp:
         self.user_input.delete(0, END)
 
         # Get agent's response
-        response = self.agent(user_text)
-        self.display_message("Agent", response)
+        try:
+            response = self.agent(user_text)
+            self.display_message("Agent", response)
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            self.display_message("Agent", "Oops! Something went wrong. Please try again later.")
 
 # Main function to run the app
 def main():
-    # Set up the agent with a system prompt
     system_prompt = "You are an astronomy tutor helping a child learn about space. Use simple language and make the explanations engaging."
     agent = AstronomyAgent(system_prompt=system_prompt)
 
-    # Create the main window
     root = tk.Tk()
     app = AstronomyTutorApp(root, agent)
     root.mainloop()
