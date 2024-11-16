@@ -21,6 +21,7 @@ An interactive application designed to help children learn about astronomy. The 
 
 
 **Second AI Agent: Interactive Calculation Agent**
-	This project is an AI agent that can perform calculations and retrieve information by interacting in a loop of Thought, Action, PAUSE, and Observation, ultimately providing an Answer to the user’s question. The agent leverages OpenAI’s GPT models to process natural language queries and execute specific actions like calculations or retrieving average dog weights.
+
+This project is an AI agent that can perform calculations and retrieve information by interacting in a loop of Thought, Action, PAUSE, and Observation, ultimately providing an Answer to the user’s question. The agent leverages OpenAI’s GPT models to process natural language queries and execute specific actions like calculations or retrieving average dog weights.
 
  The Interactive Calculation Agent is designed to simulate an AI assistant capable of reasoning through problems by breaking them down into thoughts and actions. It can perform calculations, fetch information, and provide detailed answers, demonstrating a simple form of tool use by an AI model.
